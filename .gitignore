@@ -1,0 +1,18 @@
+# Media files are large and often not ours to redistribute; keep them out of git.
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.avi
+*.m4v
+*.wav
+*.mp3
+*.aac
+
+# Per-tool working folders: keep the folder, ignore the contents.
+*/input/*
+*/output/*
+!*/input/.gitkeep
+!*/output/.gitkeep
+
+.DS_Store
