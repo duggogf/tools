@@ -5,6 +5,7 @@ A collection of small, self-contained tools. Each tool lives in its own top-leve
 | Folder | What it does |
 |---|---|
 | [`video-editing/`](video-editing/) | Convert horizontal (16:9) videos such as game trailers into vertical (9:16) videos for Instagram Reels, TikTok and YouTube Shorts. |
+| [`meta-marketing/`](meta-marketing/) | Research and playbook for marketing Rogue's Odyssey on Instagram and Facebook: organic Reels, paid ads for Steam wishlists, creative rules, attribution and a Next Fest timeline. |
 
 ## Conventions
 
