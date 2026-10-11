@@ -5,6 +5,7 @@ A collection of small, self-contained tools. Each tool lives in its own top-leve
 | Folder | What it does |
 |---|---|
 | [`video-editing/`](video-editing/) | Convert horizontal (16:9) videos such as game trailers into vertical (9:16) videos for Instagram Reels, TikTok and YouTube Shorts. |
+| [`roblox-prototype/`](roblox-prototype/) | Three.js replica of default Roblox gameplay (character, camera, controls, animation) for prototyping mechanics before porting them to Luau. |
 
 ## Conventions
 
