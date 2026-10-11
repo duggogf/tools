@@ -13,8 +13,24 @@ export class CFrame {
 		this.Rotation = quaternion.clone();
 	}
 
-	static new(position) {
-		return new CFrame(position, new THREE.Quaternion());
+	// CFrame.new(pos) or CFrame.new(x, y, z)
+	static new(x = 0, y = 0, z = 0) {
+		if (x && x.isVector3) return new CFrame(x, new THREE.Quaternion());
+		return new CFrame(new THREE.Vector3(x, y, z), new THREE.Quaternion());
+	}
+
+	// World CFrame of a THREE object (BasePart.CFrame).
+	static fromObject3D(object3d) {
+		object3d.updateWorldMatrix(true, false);
+		const p = new THREE.Vector3();
+		const q = new THREE.Quaternion();
+		object3d.matrixWorld.decompose(p, q, _v);
+		return new CFrame(p, q);
+	}
+
+	static fromAxisAngle(axis, angle) {
+		_q.setFromAxisAngle(_v.copy(axis).normalize(), angle);
+		return new CFrame(new THREE.Vector3(), _q);
 	}
 
 	// CFrame.lookAlong(pos, dir): position with -Z pointing along dir, Y up.
@@ -41,6 +57,10 @@ export class CFrame {
 		return new CFrame(new THREE.Vector3(), _q);
 	}
 
+	get p() {
+		return this.Position;
+	}
+
 	get LookVector() {
 		return new THREE.Vector3(0, 0, -1).applyQuaternion(this.Rotation);
 	}
@@ -61,6 +81,40 @@ export class CFrame {
 	// cf + vector3
 	add(v) {
 		return new CFrame(this.Position.clone().add(v), this.Rotation);
+	}
+
+	inverse() {
+		const q = this.Rotation.clone().invert();
+		const p = this.Position.clone().negate().applyQuaternion(q);
+		return new CFrame(p, q);
+	}
+
+	// cf.Rotation in Luau (rotation only)
+	rotationOnly() {
+		return new CFrame(new THREE.Vector3(), this.Rotation);
+	}
+
+	ToAxisAngle() {
+		const q = this.Rotation.clone().normalize();
+		if (q.w < 0) q.set(-q.x, -q.y, -q.z, -q.w);
+		const angle = 2 * Math.acos(Math.min(1, q.w));
+		const s = Math.sqrt(Math.max(0, 1 - q.w * q.w));
+		const axis = s < 1e-6 ? new THREE.Vector3(1, 0, 0) : new THREE.Vector3(q.x / s, q.y / s, q.z / s);
+		return { axis, angle };
+	}
+
+	// Returns [rx, ry, rz] such that cf = fromEulerAnglesYXZ(rx, ry, rz).
+	ToEulerAnglesYXZ() {
+		const e = new THREE.Euler().setFromQuaternion(this.Rotation, "YXZ");
+		return [e.x, e.y, e.z];
+	}
+
+	// x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22
+	GetComponents() {
+		_m.makeRotationFromQuaternion(this.Rotation);
+		const e = _m.elements;
+		const p = this.Position;
+		return [p.x, p.y, p.z, e[0], e[4], e[8], e[1], e[5], e[9], e[2], e[6], e[10]];
 	}
 
 	vectorToWorldSpace(v) {

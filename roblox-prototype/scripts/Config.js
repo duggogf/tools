@@ -2,6 +2,7 @@
 // Every tunable in one place, named after the Roblox property or PlayerModule
 // constant it mirrors. Values marked MEASURE are not published by Roblox and are
 // best estimates; dial them in the settings panel, then bake the result here.
+import { Signal } from "./Signal.js";
 
 export const Config = {
 	// Workspace
@@ -27,12 +28,20 @@ export const Config = {
 	LandedToJumpDelay: 0.08, // s between Landed and the next allowed jump, MEASURE
 	JumpingStateDuration: 0.1, // s the Jumping state lasts before Freefall
 
+	// Humanoid physics implementation (replica only, no Roblox counterpart)
+	PHYSICS_HZ: 240, // Roblox steps physics at 240 Hz
+	GROUND_SAMPLE_RADIUS: 0.8, // 4 extra floor rays around the root centre
+	BODY_RADIUS: 0.6, // horizontal wall-ray reach beyond the root centre
+	HEAD_TOP_OFFSET: 2.2, // root centre to head top (5.2 tall rig)
+
 	// StarterPlayer camera
 	CameraMaxZoomDistance: 400,
 	CameraMinZoomDistance: 0.5,
 	EnableMouseLockOption: true,
 	DevComputerCameraMovementMode: "Classic", // Classic | Follow | CameraToggle
 	FieldOfView: 70, // vertical degrees
+	NearPlaneZ: -0.5, // Camera.NearPlaneZ (negative, like Roblox)
+	CameraMode: "Classic", // Player.CameraMode: Classic | LockFirstPerson
 	NameDisplayDistance: 100,
 
 	// UserGameSettings
@@ -92,6 +101,35 @@ export const Config = {
 	JUMP_ANIM_DURATION: 0.31,
 	FALL_TRANSITION_TIME: 0.2,
 	TOOL_TRANSITION_TIME: 0.1,
+};
+
+// Player (Players.LocalPlayer). Camera/zoom properties read through to Config so the
+// settings panel can change them live.
+export const LocalPlayer = {
+	Name: "Player1",
+	Character: null,
+	CharacterAdded: new Signal(),
+	CharacterRemoving: new Signal(),
+	get CameraMinZoomDistance() { return Config.CameraMinZoomDistance; },
+	get CameraMaxZoomDistance() { return Config.CameraMaxZoomDistance; },
+	get CameraMode() { return Config.CameraMode; },
+	get DevEnableMouseLock() { return Config.EnableMouseLockOption; },
+	DevComputerMovementMode: "UserChoice",
+	DevComputerCameraMode: "UserChoice",
+	DevTouchMovementMode: "UserChoice",
+	DevCameraOcclusionMode: "Zoom",
+};
+
+// UserSettings():GetService("UserGameSettings")
+export const UserGameSettings = {
+	RotationType: "MovementRelative", // MovementRelative | CameraRelative
+	ControlMode: "MouseLockSwitch",
+	ComputerMovementMode: "KeyboardMouse",
+	TouchMovementMode: "DynamicThumbstick",
+	get ComputerCameraMovementMode() { return Config.DevComputerCameraMovementMode; },
+	get MouseSensitivity() { return Config.MouseSensitivity; },
+	get GamepadCameraSensitivity() { return Config.GamepadCameraSensitivity; },
+	GetCameraYInvertValue() { return Config.CameraYInverted ? -1 : 1; },
 };
 
 export const TAU = Math.PI * 2;
