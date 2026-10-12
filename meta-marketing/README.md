@@ -6,6 +6,7 @@ Rogue's Odyssey is a 2.5D roguelike ARPG (co-op) for PC, sold on Steam, in the O
 
 ## Docs
 
+- [`docs/setup-test-plan.md`](docs/setup-test-plan.md): the working plan. Three fixed assets (60 s trailer, 20 s teaser, cover image), one setup variable tested at a time from now through launch week, with budgets, dates and decision metrics.
 - [`docs/meta-marketing-research.md`](docs/meta-marketing-research.md): full research report. Covers Instagram ranking signals and content pillars, paid Facebook/Instagram ads for a Steam game, creative rules for the first second, the Steam attribution problem and how to measure anyway, creator Partnership Ads, a timeline running from the October 2026 Next Fest into the November launch, and the skills to build.
 
 ## The plan in one screen
